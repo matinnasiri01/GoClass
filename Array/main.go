@@ -26,6 +26,7 @@ func main() {
 
 	// %v -> value & %#v -> value with type
 	// %d -> integer
+	// %s -> string
 
 
 	// reading values from array
