@@ -1,40 +1,44 @@
+/*
+Airline Agency
+
+
+*/
+
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	var n int
-	fmt.Scan(&n)
-
-	countries := make(map[string]string)
-
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
+	co := make(map[string]string,n)
 	for i := 0; i < n; i++ {
-		var name, code string
-		fmt.Scan(&name, &code)
-		countries[code] = name
+		scanner.Scan()
+		inp := scanner.Text()
+		con := strings.Split(inp, " ")
+		co[con[0]] = con[1]
+	}
+	
+	test(*scanner)
+	
+}
+
+func test (scanner bufio.Scanner){
+	scanner.Scan()
+	pcc, _ := strconv.Atoi(scanner.Text())
+	pcn := make([]string, pcc)
+
+	for i := 0; i != pcc; i++ {
+		scanner.Scan()
+		pcn[i] = strings.TrimPrefix(scanner.Text(),"+")
 	}
 
-	var q int
-	fmt.Scan(&q)
-
-	for i := 0; i < q; i++ {
-		var number string
-		fmt.Scan(&number)
-
-		found := false
-		for code, country := range countries {
-			if strings.HasPrefix(number, code) {
-				fmt.Println(country)
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			fmt.Println("Invalid Number")
-		}
-	}
+	fmt.Println(pcn)
 }
