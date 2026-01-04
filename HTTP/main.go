@@ -21,7 +21,11 @@ type Address struct{
     City    string 
     Street  string
 }
-
+type Book struct {
+    Title  string `json:"title"`
+    Author string `json:"author"`
+    Year   int    `json:"year"`
+}
 
 func main() {
 
@@ -47,11 +51,27 @@ func main() {
 			Street: "Toos",
 		},
 	}
+
+
+	jsonData := []byte(`{
+	    "title": "The Great Gatsby",
+	    "author": "F. Scott Fitzgerald",
+	    "year": 1925
+	}`)
+	var book Book
+	err := json.Unmarshal(jsonData, &book)
+	if err != nil {
+	    fmt.Println("Error:", err)
+	    return
+	}
 	
 	fmt.Println(CTJMarshal(m))
 	fmt.Println(CTJMarshal(e))
 	fmt.Println(CTJMarshal(t))
 	fmt.Println(CTJMarshalIndent(t))
+	fmt.Println("Title:", book.Title)
+	fmt.Println("Author:", book.Author)
+	fmt.Println("Year:", book.Year)
 
 
 }
@@ -68,6 +88,7 @@ func CTJMarshal(n any) string{
 }
 
 func CTJMarshalIndent(n any) string{
+	//					   |prefix 
 	b,e := json.MarshalIndent(n,"","\t")
 	if e != nil {
 		panic(e)
