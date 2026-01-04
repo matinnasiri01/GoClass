@@ -14,6 +14,12 @@ type PersonWithTags struct{
 	Name string `json:"FirstName"`
 	Age int `json:"Age"`
 	Email string `json:"Email"`
+	Address Address `json:"Address"`
+}
+
+type Address struct{
+    City    string 
+    Street  string
 }
 
 
@@ -36,18 +42,33 @@ func main() {
 		Name: "Mehran",
 		Age: 19,
 		Email: "Mehran@gmail.com",
+		Address: Address{
+			City: "Mashhad",
+			Street: "Toos",
+		},
 	}
 	
-	fmt.Println(ConvertToJson(m))
-	fmt.Println(ConvertToJson(e))
-	fmt.Println(ConvertToJson(t))
+	fmt.Println(CTJMarshal(m))
+	fmt.Println(CTJMarshal(e))
+	fmt.Println(CTJMarshal(t))
+	fmt.Println(CTJMarshalIndent(t))
+
 
 }
 
 
 
-func ConvertToJson(n any) string{
+func CTJMarshal(n any) string{
 	b,e := json.Marshal(n)
+	if e != nil {
+		panic(e)
+	}
+	
+	return  string(b)
+}
+
+func CTJMarshalIndent(n any) string{
+	b,e := json.MarshalIndent(n,"","\t")
 	if e != nil {
 		panic(e)
 	}
