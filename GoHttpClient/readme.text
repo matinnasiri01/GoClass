@@ -1,0 +1,2 @@
+for use Go Http Client
+run: go get -u github.com/bozd4g/go-http-client/
