@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
 )
 
 type Response struct {
@@ -19,7 +18,6 @@ type Book struct {
 }
 
 var borrow []Book
-
 var books []Book
 
 type Server struct {
@@ -42,60 +40,24 @@ func (s *Server) handelBook(w http.ResponseWriter, r *http.Request) {
 
 	// post
 	if r.Method == "POST" {
+
 		var book Book
 		err := json.NewDecoder(r.Body).Decode(&book)
 		if err != nil {
-			fmt.Println(err)
+			ErrorResponse(w,"Bad Request!")
+			panic(err)
 		}
 
-		ti, au := strings.ToLower(book.Title), strings.ToLower(book.Author)
-		for _, s := range books {
-			if s.Title == ti && s.Author == au {
-				fmt.Println("Sik!")
-				return
-
-			}
+		if b, _ := check(books, book); b {
+			ResultResponse(w,"this book is already in the library")
+			return
 		}
+
 		books = append(books, book)
-		w.WriteHeader(http.StatusAccepted)
-		fmt.Println("Add!")
+		ResultResponse(w, fmt.Sprintf("added book %s by %s", book.Title, book.Author))
 
 	}
 
-	if r.Method == "GET" {
-		qu := r.URL.Query()
-
-		ti, at := qu.Get("title"), qu.Get("author")
-
-		if ti == "" || at == "" {
-			ErrorResponse(w,"title or author cannot be empty")
-			return
-		}
-		if len(books) == 0 {
-			ErrorResponse(w,"title or author cannot be empty")
-			return
-		}
-
-		if ch, index := check(books, Book{Title: ti, Author: at}); ch {
-			json.NewEncoder(w).Encode(books[index])
-		} else {
-			ErrorResponse(w,"title or author cannot be empty")
-		}
-
-	}
-	if r.Method == "DELETE" {
-		qu := r.URL.Query()
-		ti, at := qu.Get("title"), qu.Get("author")
-		if isDatabaseEmpty() {
-
-		}
-		for _, b := range books {
-			if b.Title == ti && b.Author == at {
-				json.NewEncoder(w).Encode(b)
-			}
-		}
-
-	}
 }
 
 func main() {
@@ -103,11 +65,10 @@ func main() {
 	s.Start()
 }
 
-func isDatabaseEmpty() bool {
-	return len(books) == 0
-}
-
 func check(l []Book, b Book) (bool, int) {
+	if len(l) == 0 {
+		return false, -1
+	}
 	low := func(s string) string {
 		return strings.ToLower(s)
 	}
@@ -119,5 +80,11 @@ func check(l []Book, b Book) (bool, int) {
 	return false, -1
 }
 
+func ResultResponse(w http.ResponseWriter, message string) {
+	w.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(w).Encode(Response{Result: message})
+}
+func ErrorResponse(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(Response{Error: message})
 }
