@@ -1,27 +1,31 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
-//----------------------------
+// ----------------------------
 func WelcomeHandler(c echo.Context) error {
-	return c.String(http.StatusOK,"Welcome!")
+	return c.String(http.StatusOK, "Welcome!")
 }
 
-//----------------------------
-type User struct{
+// ----------------------------
+type User struct {
 	Username string `json:"username"`
-	Age int		 `json:"age"`
+	Age      int    `json:"age"`
 }
+
 func SignupHandler(c echo.Context) error {
 	user := new(User)
-	if err:= c.Bind(user);err != nil {
+	if err := c.Bind(user); err != nil {
 		return err
 	}
-	return c.JSON(http.StatusCreated,user)
+	return c.JSON(http.StatusCreated, user)
 }
+
+// ----------------------------
 func SayHiHandler(c echo.Context) error {
 	name := c.QueryParam("name")
 
@@ -31,11 +35,23 @@ func SayHiHandler(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, "+name+"!")
 }
 
+// ----------------------------
+func PathParameterHandler(c echo.Context) error {
+	name := c.Param("namep")
+	age := c.Param("agep")
 
-func main () {
+	return c.String(
+		http.StatusOK,
+		fmt.Sprintf("Name : %s -----> Age -----> %s Grade -----> *****",
+			name, age))
+}
+
+func main() {
 	e := echo.New()
-	e.GET("/",WelcomeHandler)
-	e.POST("/signup",SignupHandler)
+	// Base:
+	e.GET("/", WelcomeHandler)
+	e.POST("/signup", SignupHandler)
 	e.GET("/sayhi", SayHiHandler)
+	e.GET("/name/:namep/age/:agep", PathParameterHandler)
 	e.Start(":8080")
 }
