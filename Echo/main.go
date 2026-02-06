@@ -22,12 +22,20 @@ func SignupHandler(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated,user)
 }
+func SayHiHandler(c echo.Context) error {
+	name := c.QueryParam("name")
 
+	if name == "" {
+		return c.String(http.StatusBadRequest, "Name parameter is required")
+	}
+	return c.String(http.StatusOK, "Hello, "+name+"!")
+}
 
 
 func main () {
 	e := echo.New()
 	e.GET("/",WelcomeHandler)
 	e.POST("/signup",SignupHandler)
+	e.GET("/sayhi", SayHiHandler)
 	e.Start(":8080")
 }
