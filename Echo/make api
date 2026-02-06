@@ -1,0 +1,9 @@
+1. use none for URL not verb or actions
+2. use versioning for api
++https://example.com/v1/products
++https://example.com/v2.5/products
+
+In a version like 2.5.1, the first digit is called the major version, which if changed means that new versions are not backward compatible with the old version. The second digit is called the minor version, which increases by one with each new release. The third digit is called the patch, which fixes bugs in each patch. When the minor version increases, the patch will be reset to zero.
+
+3. pagination 
+give big data stage by stage

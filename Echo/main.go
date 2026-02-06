@@ -68,7 +68,15 @@ func main() {
 	// -> 8080:/users/:id
 	g.GET("/:id", Test)
 
-
+	/*
+		Binding
+		you can bind json in request body and use at 
+		create an struck 
+		create an object 
+		use c.Bind(new_object)
+		Done!
+	
+	*/
 
 	e.Start(":8080")
 }
