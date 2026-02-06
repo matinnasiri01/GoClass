@@ -1,0 +1,41 @@
+Body Dump middleware
+It can be used to log requests and responses.
+
+CSRF middleware
+It prevents the user from sending a request to the server more than once in a period of time, and this is to prevent attacks.
+
+Body Limit middleware
+Specifies the maximum size of each request.
+
+Gzip middleware
+Zips the request in a way that is understandable to the client and server, and the server unzips it. The advantage of using this middleware is that it reduces the amount of data that needs to be exchanged.
+
+Request ID middleware
+Consider an ID for each request.
+
+JWT middleware
+Implements the JSON Web Token mechanism and is a widely used middleware.
+
+
+
+
+
+
+Middleware  func
+
+func helloMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        return c.String(http.StatusOK, "Hello ")
+    }
+}
+-------------------------
+c.Use()
+-------------------------
+str
+
+     server 
+     ||
+     Middleware  (can custom req and res)
+     ||
+     client
+
