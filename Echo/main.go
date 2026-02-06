@@ -7,6 +7,10 @@ import (
 )
 
 // ----------------------------
+func Test(c echo.Context) error { 
+	return c.String(http.StatusOK,"Test")
+}
+// ----------------------------
 func WelcomeHandler(c echo.Context) error {
 	return c.String(http.StatusOK, "Welcome!")
 }
@@ -53,5 +57,18 @@ func main() {
 	e.POST("/signup", SignupHandler)
 	e.GET("/sayhi", SayHiHandler)
 	e.GET("/name/:namep/age/:agep", PathParameterHandler)
+
+	// Routing:
+	// "/stutent/*"
+	// all urls start with `/stutent` return to the this rout handeler.
+	// or Use group:
+	g := e.Group("/users")
+	g.GET("", Test)
+	g.POST("", Test)
+	// -> 8080:/users/:id
+	g.GET("/:id", Test)
+
+
+
 	e.Start(":8080")
 }
